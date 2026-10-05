@@ -73,7 +73,8 @@ cp -r weekly-ai-brief/skills/weekly-ai-briefing ~/.claude/skills/
 | `huggingface.co/papers?date=` | ✅ 평일만 (주말·당일은 400) |
 | `huggingface.co/papers/week/YYYY-Wnn` | ✅ upvote로 화제성 판단 |
 | `huggingface.co/changelog` | ✅ 플랫폼 업데이트, 공식 블로그보다 신뢰도 높음 |
-| `github.com/trending` | ❌ 수년 전 캐시 반환 |
+| `github.com/trending` | ❌ Cowork에선 수년 전 캐시 / ✅ Claude Code에서 `curl ?since=weekly`는 최신 |
+| `gh api search/repositories` | ✅ Claude Code에서 신규 레포 스타 순위용 |
 | GitHub `releases` 목록 페이지 | ⚠️ 캐시가 몇 달 전 |
 | GitHub `releases/tag/<ver>` | ✅ 최신 정상 |
 | `pypi.org/project/<pkg>/#history` | ✅ 날짜 확정용 |

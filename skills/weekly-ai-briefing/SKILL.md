@@ -62,6 +62,11 @@ description: 지난 1주일 AI 이슈·주요 랩 동향·GitHub·Hugging Face·
 **트랙 D — GitHub·HF·논문**
 GitHub 급상승 레포, 학습·추론 스택 릴리스(vLLM, SGLang, transformers, PyTorch, llama.cpp, unsloth, axolotl, verl, TRL, DeepSpeed, FlashInfer), HF 트렌딩 오픈웨이트 모델·데이터셋·플랫폼 changelog, 그리고 논문. 논문 우선 주제: **트랜스포머 대안 아키텍처(SSM/Mamba, linear attention, sparse attention)**, 효율적 학습·파인튜닝, 추론(reasoning), RL/post-training, 롱컨텍스트, 추론 최적화(KV cache, speculative decoding). Eval·Agent 주제는 B·C와 중복 최소화.
 
+**GitHub 스타 상위** (트랙 D와 별개로 메인이 직접 뽑는다. 숫자를 서브에이전트 요약에 맡기지 않는다)
+- **(a) 이번 주 스타 증가 상위**: `curl -s "https://github.com/trending?since=weekly"` HTML에서 레포·"N stars this week"·누적 스타·언어·설명을 파싱. GitHub의 weekly 창은 '실행 시점부터 지난 7일'이라 브리핑 기간과 하루쯤 어긋날 수 있음 → 표 아래 명시
+- **(b) 이번 주 신규 레포 스타 상위**: `gh api "search/repositories?q=created:<시작>..<끝>+stars:>300&sort=stars&order=desc&per_page=20"`
+- 둘 다 AI와 무관한 레포(게임 모드, 웹서버 등)는 빼고 **각 상위 10개**. 뺀 레포 수를 한 줄로 적는다
+
 ### 5) 교차 검증
 
 서브에이전트 결과가 모이면 직접 확인한다:
@@ -93,7 +98,7 @@ GitHub 급상승 레포, 학습·추론 스택 릴리스(vLLM, SGLang, transform
 3. **🔍 AI Eval**
 4. **🤖 Agent**
 5. **🚀 주요 랩 동향 · 모델 릴리스** — 릴리스가 많으면 표, 적으면 항목별 서술. 랩별로 훑되 없는 곳은 생략하지 말고 짧게 표시
-6. **🛠 GitHub / 오픈소스**
+6. **🛠 GitHub / 오픈소스** — 맨 앞에 **⭐ 스타 상위 표 2개**((a) 이번 주 증가, (b) 신규 레포). 열: 순위 · 레포(링크) · 이번 주 +스타(신규는 누적) · 누적 · 한 줄 설명. 표 아래 💡 한 줄로 그 주 순위의 흐름을 짚고, 그 뒤에 릴리스 항목들
 7. **🤗 Hugging Face**
 8. **📄 논문 — 아키텍처·효율·RL**
 9. **⚖️ 정책 · 안전성 · 인프라**
@@ -120,8 +125,9 @@ GitHub 급상승 레포, 학습·추론 스택 릴리스(vLLM, SGLang, transform
 - ⚠️ **HF 게재일 ≠ arXiv v1 제출일.** arXiv ID가 그 주 번호대(예: 2609.2xxxx)여도 v1은 몇 주 전인 경우가 흔하다. **전부 abs 페이지로 v1 확인할 것**
 
 **GitHub / PyPI**
-- `api.github.com`, `github.com` curl, `pypi.org` JSON API → 차단
-- `github.com/trending` → 수년 전 캐시 반환, **사용 불가**
+- Cowork 환경: `api.github.com`, `github.com` curl, `pypi.org` JSON API → 차단, WebFetch로 본 `github.com/trending` → 수년 전 캐시라 **사용 불가**
+- Claude Code(로컬 맥) 환경: `curl github.com/trending?since=weekly`와 `gh api search/repositories`가 **최신 정상** (2026-10-06 확인). 스타 상위 표는 이 경로로 뽑는다
+- `api.ossinsight.io` 트렌딩 API → 이벤트 수집 중단(2026-03~)으로 **빈 결과**, 사용 불가
 - `github.com/<org>/<repo>/releases` 목록 페이지도 **캐시가 몇 달 전** 것을 반환하는 경우 많음
 - `github.com/<org>/<repo>/releases/tag/<ver>` **개별 태그 페이지는 최신 정상 반환**
 - ✅ **2단계 루틴: `pypi.org/project/<pkg>/#history`로 날짜 확정 → `releases/tag/<ver>`로 내용 확인**
