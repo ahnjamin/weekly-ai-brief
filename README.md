@@ -11,6 +11,8 @@
 ├── skills/
 │   └── weekly-ai-briefing/
 │       └── SKILL.md          # 스킬 본체
+├── scripts/
+│   └── fetch_papers.py       # 기간 안 HF Daily Papers 후보 수집
 └── briefings/
     ├── 2026-W38_0914-0921.md # 아카이브
     └── 2026-W39_0921-0927.md
@@ -26,6 +28,8 @@ mkdir -p ~/.claude/skills
 cp -r weekly-ai-brief/skills/weekly-ai-briefing ~/.claude/skills/
 ```
 
+논문 후보 스크립트(`scripts/fetch_papers.py`)는 레포 루트에서 실행합니다. 스킬을 쓸 때는 이 레포 폴더에서 Claude Code를 여세요.
+
 프로젝트 단위로 쓰려면 `~/.claude/skills` 대신 `<프로젝트>/.claude/skills`에 넣으면 됩니다.
 
 ### 사용
@@ -38,19 +42,16 @@ cp -r weekly-ai-brief/skills/weekly-ai-briefing ~/.claude/skills/
 ## 스킬이 하는 일
 
 1. 기간 확정 (기본: 오늘부터 지난 7일)
-2. 직전 회차 항목을 **중복 제외 목록**으로 정리
-3. **1차** — `general-purpose` 서브에이전트 4개를 **병렬**로 실행
+2. `scripts/fetch_papers.py`로 **논문 후보를 한 번에** 가져옴 — 기간 안 HF Daily Papers 전부(upvote·초록 포함), `briefings/`에 이미 나온 ID는 자동 제외
+3. `general-purpose` 서브에이전트 5개를 **병렬**로 실행
    - **A** 주요 이슈 · 랩 동향 · 모델 릴리스 · 정책 · GeekNews
-   - **B** AI Eval
-   - **C** Agent (데이터 분석 에이전트 + 평가 에이전트 각 최소 1건)
-   - **D** 오픈소스 릴리스 · Hugging Face · 아키텍처/효율 논문
+   - **B** AI Eval 프레임워크 · 벤치마크 발표 (논문 제외)
+   - **C** Agent 프레임워크 · MCP · 보안 사건 · 프로덕션 사례 (논문 제외)
+   - **D** 오픈소스 릴리스 · Hugging Face
+   - **P** 후보 파일 하나에서 논문을 **분야별로 나눠** 고름 — Eval · Agent · 아키텍처/효율 · NLP · CV · 생성모델 · RL/로보틱스 · 음성/과학/이론
    - 동시에 메인이 **GitHub 스타 상위 표 2개**(이번 주 증가 / 신규 레포)를 직접 뽑음
-4. 1차 교차 검증 — 트랙마다 핵심 arXiv 논문과 큰 발표를 1차 출처로 확인
-5. **2차** — 1차에서 쓴 arXiv ID를 제외 목록으로 넘겨 **분야별 논문 트랙 5개**를 병렬 실행
-   - **P1** NLP·LLM · **P2** 컴퓨터 비전 · **P3** 생성모델 · **P4** RL·로보틱스 · **P5** 음성·AI for Science·ML 이론
-6. 2차 교차 검증 후 12개 섹션 브리핑 작성 (마지막에 "다른 창에서 공부할 때 추천 순서" + 커버리지 한계)
-
-서브에이전트가 총 9개라 사용량이 꽤 듭니다.
+4. 교차 검증 — 분야마다 논문 몇 편과 큰 발표를 1차 출처로 확인
+5. 12개 섹션 브리핑 작성 (마지막에 "다른 창에서 공부할 때 추천 순서" + 커버리지 한계)
 
 ## 각 항목 포맷
 
